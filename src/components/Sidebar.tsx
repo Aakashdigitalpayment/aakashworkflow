@@ -52,6 +52,7 @@ const navGroups: NavGroup[] = [
       { id: 'nav-reports', label: 'Reports', icon: 'ChartBarIcon', href: '/reports' },
       { id: 'nav-exec-reports', label: 'Executive Reports', icon: 'PresentationChartLineIcon', href: '/executive-reports' },
       { id: 'nav-activity', label: 'Activity Log', icon: 'ClockIcon', href: '/activity-log' },
+      { id: 'nav-compliance', label: 'Compliance', icon: 'ShieldCheckIcon', href: '/compliance' },
     ],
   },
   {
