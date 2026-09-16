@@ -59,6 +59,7 @@ const navGroups: NavGroup[] = [
     id: 'group-admin',
     label: 'Administration',
     items: [
+      { id: 'nav-user-admin', label: 'User Admin', icon: 'ShieldCheckIcon', href: '/user-admin' },
       { id: 'nav-admin', label: 'Employee Admin', icon: 'UserGroupIcon', href: '/admin' },
       { id: 'nav-users', label: 'Users', icon: 'UsersIcon', href: '/users' },
       { id: 'nav-roles', label: 'Roles & Permissions', icon: 'ShieldCheckIcon', href: '/roles' },
