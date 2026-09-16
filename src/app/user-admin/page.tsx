@@ -21,6 +21,7 @@ interface DepartmentAccess {
 
 interface ManagedUser {
   id: string;
+  userCode: string; // Unique staff identifier
   name: string;
   email: string;
   phone: string;
@@ -86,18 +87,18 @@ const buildAccess = (primary: Department, role: UserRole): DepartmentAccess[] =>
   }));
 
 const SEED_USERS: ManagedUser[] = [
-  { id: 'UA-001', name: 'Rajesh Kumar Shrestha', email: 'rajesh@aakashcooperative.com.np', phone: '+977-9801234567', role: 'Admin', primaryDept: 'Management', deptAccess: buildAccess('Management', 'Admin'), status: 'Active', createdAt: '2078-04-01', lastLogin: '16 Ashwin 2083, 14:22', initials: 'RKS', avatarColor: 'bg-blue-500' },
-  { id: 'UA-002', name: 'Ram Prasad Adhikari', email: 'ram.adhikari@aakashcooperative.com.np', phone: '+977-9802345678', role: 'Manager', primaryDept: 'Administration', deptAccess: buildAccess('Administration', 'Manager'), status: 'Active', createdAt: '2079-01-15', lastLogin: '16 Ashwin 2083, 11:45', initials: 'RA', avatarColor: 'bg-violet-500' },
-  { id: 'UA-003', name: 'Sita Sharma', email: 'sita.sharma@aakashcooperative.com.np', phone: '+977-9803456789', role: 'Manager', primaryDept: 'Finance', deptAccess: buildAccess('Finance', 'Manager'), status: 'Active', createdAt: '2079-03-10', lastLogin: '16 Ashwin 2083, 09:30', initials: 'SS', avatarColor: 'bg-emerald-500' },
-  { id: 'UA-004', name: 'Hari Bahadur Tamang', email: 'hari.tamang@aakashcooperative.com.np', phone: '+977-9804567890', role: 'Employee', primaryDept: 'Credit', deptAccess: buildAccess('Credit', 'Employee'), status: 'Active', createdAt: '2080-06-20', lastLogin: '15 Ashwin 2083, 16:10', initials: 'HT', avatarColor: 'bg-amber-500' },
-  { id: 'UA-005', name: 'Gita Rai', email: 'gita.rai@aakashcooperative.com.np', phone: '+977-9805678901', role: 'Employee', primaryDept: 'Recovery', deptAccess: buildAccess('Recovery', 'Employee'), status: 'Active', createdAt: '2080-09-05', lastLogin: '16 Ashwin 2083, 08:55', initials: 'GR', avatarColor: 'bg-rose-500' },
-  { id: 'UA-006', name: 'Mohan Thapa', email: 'mohan.thapa@aakashcooperative.com.np', phone: '+977-9806789012', role: 'Manager', primaryDept: 'HR', deptAccess: buildAccess('HR', 'Manager'), status: 'Active', createdAt: '2079-11-01', lastLogin: '14 Ashwin 2083, 13:20', initials: 'MT', avatarColor: 'bg-cyan-500' },
-  { id: 'UA-007', name: 'Sunita Karki', email: 'sunita.karki@aakashcooperative.com.np', phone: '+977-9807890123', role: 'Employee', primaryDept: 'IT', deptAccess: buildAccess('IT', 'Employee'), status: 'Active', createdAt: '2081-02-14', lastLogin: '16 Ashwin 2083, 10:05', initials: 'SK', avatarColor: 'bg-indigo-500' },
-  { id: 'UA-008', name: 'Binod Poudel', email: 'binod.poudel@aakashcooperative.com.np', phone: '+977-9808901234', role: 'Employee', primaryDept: 'Audit', deptAccess: buildAccess('Audit', 'Employee'), status: 'Active', createdAt: '2080-04-22', lastLogin: '13 Ashwin 2083, 15:40', initials: 'BP', avatarColor: 'bg-teal-500' },
-  { id: 'UA-009', name: 'Kamala Gurung', email: 'kamala.gurung@aakashcooperative.com.np', phone: '+977-9809012345', role: 'Employee', primaryDept: 'Administration', deptAccess: buildAccess('Administration', 'Employee'), status: 'Inactive', createdAt: '2081-07-10', lastLogin: '05 Ashwin 2083, 09:00', initials: 'KG', avatarColor: 'bg-blue-500' },
-  { id: 'UA-010', name: 'Dipak Shrestha', email: 'dipak.shrestha@aakashcooperative.com.np', phone: '+977-9800123456', role: 'Employee', primaryDept: 'Marketing', deptAccess: buildAccess('Marketing', 'Employee'), status: 'Pending', createdAt: '2082-01-05', lastLogin: 'Never', initials: 'DS', avatarColor: 'bg-violet-500' },
-  { id: 'UA-011', name: 'Anita Maharjan', email: 'anita.maharjan@aakashcooperative.com.np', phone: '+977-9801111222', role: 'Employee', primaryDept: 'Finance', deptAccess: buildAccess('Finance', 'Employee'), status: 'Active', createdAt: '2081-05-18', lastLogin: '16 Ashwin 2083, 07:45', initials: 'AM', avatarColor: 'bg-emerald-500' },
-  { id: 'UA-012', name: 'Prakash Bhandari', email: 'prakash.bhandari@aakashcooperative.com.np', phone: '+977-9802222333', role: 'Employee', primaryDept: 'Credit', deptAccess: buildAccess('Credit', 'Employee'), status: 'Active', createdAt: '2082-03-12', lastLogin: '15 Ashwin 2083, 12:30', initials: 'PB', avatarColor: 'bg-amber-500' },
+  { id: 'UA-001', userCode: 'AKS-001', name: 'Rajesh Kumar Shrestha', email: 'rajesh@aakashcooperative.com.np', phone: '+977-9801234567', role: 'Admin', primaryDept: 'Management', deptAccess: buildAccess('Management', 'Admin'), status: 'Active', createdAt: '2078-04-01', lastLogin: '16 Ashwin 2083, 14:22', initials: 'RKS', avatarColor: 'bg-blue-500' },
+  { id: 'UA-002', userCode: 'AKS-002', name: 'Ram Prasad Adhikari', email: 'ram.adhikari@aakashcooperative.com.np', phone: '+977-9802345678', role: 'Manager', primaryDept: 'Administration', deptAccess: buildAccess('Administration', 'Manager'), status: 'Active', createdAt: '2079-01-15', lastLogin: '16 Ashwin 2083, 11:45', initials: 'RA', avatarColor: 'bg-violet-500' },
+  { id: 'UA-003', userCode: 'AKS-003', name: 'Sita Sharma', email: 'sita.sharma@aakashcooperative.com.np', phone: '+977-9803456789', role: 'Manager', primaryDept: 'Finance', deptAccess: buildAccess('Finance', 'Manager'), status: 'Active', createdAt: '2079-03-10', lastLogin: '16 Ashwin 2083, 09:30', initials: 'SS', avatarColor: 'bg-emerald-500' },
+  { id: 'UA-004', userCode: 'AKS-004', name: 'Hari Bahadur Tamang', email: 'hari.tamang@aakashcooperative.com.np', phone: '+977-9804567890', role: 'Employee', primaryDept: 'Credit', deptAccess: buildAccess('Credit', 'Employee'), status: 'Active', createdAt: '2080-06-20', lastLogin: '15 Ashwin 2083, 16:10', initials: 'HT', avatarColor: 'bg-amber-500' },
+  { id: 'UA-005', userCode: 'AKS-005', name: 'Gita Rai', email: 'gita.rai@aakashcooperative.com.np', phone: '+977-9805678901', role: 'Employee', primaryDept: 'Recovery', deptAccess: buildAccess('Recovery', 'Employee'), status: 'Active', createdAt: '2080-09-05', lastLogin: '16 Ashwin 2083, 08:55', initials: 'GR', avatarColor: 'bg-rose-500' },
+  { id: 'UA-006', userCode: 'AKS-006', name: 'Mohan Thapa', email: 'mohan.thapa@aakashcooperative.com.np', phone: '+977-9806789012', role: 'Manager', primaryDept: 'HR', deptAccess: buildAccess('HR', 'Manager'), status: 'Active', createdAt: '2079-11-01', lastLogin: '14 Ashwin 2083, 13:20', initials: 'MT', avatarColor: 'bg-cyan-500' },
+  { id: 'UA-007', userCode: 'AKS-007', name: 'Sunita Karki', email: 'sunita.karki@aakashcooperative.com.np', phone: '+977-9807890123', role: 'Employee', primaryDept: 'IT', deptAccess: buildAccess('IT', 'Employee'), status: 'Active', createdAt: '2081-02-14', lastLogin: '16 Ashwin 2083, 10:05', initials: 'SK', avatarColor: 'bg-indigo-500' },
+  { id: 'UA-008', userCode: 'AKS-008', name: 'Binod Poudel', email: 'binod.poudel@aakashcooperative.com.np', phone: '+977-9808901234', role: 'Employee', primaryDept: 'Audit', deptAccess: buildAccess('Audit', 'Employee'), status: 'Active', createdAt: '2080-04-22', lastLogin: '13 Ashwin 2083, 15:40', initials: 'BP', avatarColor: 'bg-teal-500' },
+  { id: 'UA-009', userCode: 'AKS-009', name: 'Kamala Gurung', email: 'kamala.gurung@aakashcooperative.com.np', phone: '+977-9809012345', role: 'Employee', primaryDept: 'Administration', deptAccess: buildAccess('Administration', 'Employee'), status: 'Inactive', createdAt: '2081-07-10', lastLogin: '05 Ashwin 2083, 09:00', initials: 'KG', avatarColor: 'bg-blue-500' },
+  { id: 'UA-010', userCode: 'AKS-010', name: 'Dipak Shrestha', email: 'dipak.shrestha@aakashcooperative.com.np', phone: '+977-9800123456', role: 'Employee', primaryDept: 'Marketing', deptAccess: buildAccess('Marketing', 'Employee'), status: 'Pending', createdAt: '2082-01-05', lastLogin: 'Never', initials: 'DS', avatarColor: 'bg-violet-500' },
+  { id: 'UA-011', userCode: 'AKS-011', name: 'Anita Maharjan', email: 'anita.maharjan@aakashcooperative.com.np', phone: '+977-9801111222', role: 'Employee', primaryDept: 'Finance', deptAccess: buildAccess('Finance', 'Employee'), status: 'Active', createdAt: '2081-05-18', lastLogin: '16 Ashwin 2083, 07:45', initials: 'AM', avatarColor: 'bg-emerald-500' },
+  { id: 'UA-012', userCode: 'AKS-012', name: 'Prakash Bhandari', email: 'prakash.bhandari@aakashcooperative.com.np', phone: '+977-9802222333', role: 'Employee', primaryDept: 'Credit', deptAccess: buildAccess('Credit', 'Employee'), status: 'Active', createdAt: '2082-03-12', lastLogin: '15 Ashwin 2083, 12:30', initials: 'PB', avatarColor: 'bg-amber-500' },
 ];
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
@@ -107,6 +108,7 @@ interface Toast { id: number; message: string; type: 'success' | 'error' | 'info
 // ─── Create / Edit User Modal ─────────────────────────────────────────────────
 
 interface UserFormData {
+  userCode: string; // Unique staff identifier
   name: string;
   email: string;
   phone: string;
@@ -128,10 +130,12 @@ interface UserModalProps {
   user?: ManagedUser | null;
   onClose: () => void;
   onSave: (data: UserFormData, id?: string) => void;
+  existingCodes: string[]; // For uniqueness validation
 }
 
-function UserModal({ user, onClose, onSave }: UserModalProps) {
+function UserModal({ user, onClose, onSave, existingCodes }: UserModalProps) {
   const [form, setForm] = useState<UserFormData>({
+    userCode: user?.userCode ?? '',
     name: user?.name ?? '',
     email: user?.email ?? '',
     phone: user?.phone ?? '',
@@ -141,6 +145,8 @@ function UserModal({ user, onClose, onSave }: UserModalProps) {
   });
   const [tab, setTab] = useState<'info' | 'access'>('info');
   const [errors, setErrors] = useState<Partial<Record<keyof UserFormData, string>>>({});
+  // Filter access table by department (empty = show all)
+  const [accessDeptFilter, setAccessDeptFilter] = useState<Department | ''>('');
 
   const isEdit = !!user;
 
@@ -159,6 +165,8 @@ function UserModal({ user, onClose, onSave }: UserModalProps) {
       primaryDept: dept,
       deptAccess: buildDefaultAccess(dept, prev.role),
     }));
+    // Auto-filter access table to the selected department
+    setAccessDeptFilter(dept);
   };
 
   const toggleAccess = (dept: Department, field: 'canView' | 'canEdit' | 'canApprove') => {
@@ -172,6 +180,15 @@ function UserModal({ user, onClose, onSave }: UserModalProps) {
 
   const validate = () => {
     const e: Partial<Record<keyof UserFormData, string>> = {};
+    if (!form.userCode.trim()) {
+      e.userCode = 'User code is required';
+    } else {
+      // Check uniqueness — exclude current user's own code when editing
+      const isDuplicate = existingCodes
+        .filter(code => !isEdit || code !== user?.userCode)
+        .some(code => code.toLowerCase() === form.userCode.trim().toLowerCase());
+      if (isDuplicate) e.userCode = 'This user code is already taken';
+    }
     if (!form.name.trim()) e.name = 'Full name is required';
     if (!form.email.trim()) e.email = 'Email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Invalid email format';
@@ -183,6 +200,11 @@ function UserModal({ user, onClose, onSave }: UserModalProps) {
     if (!validate()) return;
     onSave(form, user?.id);
   };
+
+  // Filtered access rows: if a dept filter is active, show only that dept; else show all
+  const visibleAccess = accessDeptFilter
+    ? form.deptAccess.filter(a => a.dept === accessDeptFilter)
+    : form.deptAccess;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}>
@@ -217,6 +239,22 @@ function UserModal({ user, onClose, onSave }: UserModalProps) {
         <div className="flex-1 overflow-y-auto px-6 py-5">
           {tab === 'info' && (
             <div className="space-y-4">
+              {/* User Code */}
+              <div>
+                <label className="text-xs font-700 text-foreground mb-1.5 block">
+                  User Code <span className="text-red-500">*</span>
+                  <span className="ml-2 text-[10px] font-500 text-muted-foreground normal-case">Unique staff identifier (e.g. AKS-013)</span>
+                </label>
+                <input
+                  type="text"
+                  value={form.userCode}
+                  onChange={e => setForm(p => ({ ...p, userCode: e.target.value.toUpperCase() }))}
+                  placeholder="e.g. AKS-013"
+                  className={`w-full px-3 py-2.5 text-sm bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring/30 font-mono tracking-wide ${errors.userCode ? 'border-red-400' : 'border-border'}`}
+                />
+                {errors.userCode && <p className="text-xs text-red-500 mt-1">{errors.userCode}</p>}
+              </div>
+
               {/* Name */}
               <div>
                 <label className="text-xs font-700 text-foreground mb-1.5 block">Full Name <span className="text-red-500">*</span></label>
@@ -310,6 +348,30 @@ function UserModal({ user, onClose, onSave }: UserModalProps) {
                 </span>
               </div>
 
+              {/* Department filter for access table */}
+              <div className="flex items-center gap-2 mb-3">
+                <AppIcon name="FunnelIcon" size={13} className="text-muted-foreground flex-shrink-0" />
+                <select
+                  value={accessDeptFilter}
+                  onChange={e => setAccessDeptFilter(e.target.value as Department | '')}
+                  className="text-xs bg-background border border-border rounded-lg px-2.5 py-1.5 text-foreground focus:outline-none focus:ring-2 focus:ring-ring/30"
+                >
+                  <option value="">All Departments</option>
+                  {ALL_DEPARTMENTS.map(d => (
+                    <option key={d} value={d}>{d}{d === form.primaryDept ? ' (Primary)' : ''}</option>
+                  ))}
+                </select>
+                {accessDeptFilter && (
+                  <button
+                    onClick={() => setAccessDeptFilter('')}
+                    className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+                  >
+                    <AppIcon name="XMarkIcon" size={12} />
+                    Show all
+                  </button>
+                )}
+              </div>
+
               {/* Access Table */}
               <div className="border border-border rounded-xl overflow-hidden">
                 <table className="w-full text-sm">
@@ -322,8 +384,8 @@ function UserModal({ user, onClose, onSave }: UserModalProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {form.deptAccess.map((access, idx) => (
-                      <tr key={access.dept} className={`border-t border-border ${idx % 2 === 0 ? '' : 'bg-secondary/20'}`}>
+                    {visibleAccess.map((access, idx) => (
+                      <tr key={access.dept} className={`border-t border-border ${access.dept === form.primaryDept ? 'bg-primary/5' : idx % 2 === 0 ? '' : 'bg-secondary/20'}`}>
                         <td className="px-4 py-2.5">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-600 text-foreground">{access.dept}</span>
@@ -569,7 +631,7 @@ export default function UserAdminPage() {
 
   const filtered = tabFiltered.filter(u => {
     const q = search.toLowerCase();
-    const matchSearch = !search || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.id.toLowerCase().includes(q);
+    const matchSearch = !search || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.id.toLowerCase().includes(q) || u.userCode.toLowerCase().includes(q);
     const matchRole = !roleFilter || u.role === roleFilter;
     const matchDept = !deptFilter || u.primaryDept === deptFilter;
     const matchStatus = !statusFilter || u.status === statusFilter;
@@ -823,7 +885,7 @@ export default function UserAdminPage() {
             <AppIcon name="MagnifyingGlassIcon" size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search by name, email, or ID..."
+              placeholder="Search by name, email, user code, or ID..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring/30"
@@ -997,7 +1059,10 @@ export default function UserAdminPage() {
                         <div>
                           <p className="font-600 text-foreground text-sm">{user.name}</p>
                           <p className="text-xs text-muted-foreground">{user.email}</p>
-                          <p className="text-[10px] text-muted-foreground/60">{user.id}</p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="text-[10px] font-700 font-mono px-1.5 py-0.5 bg-primary/10 text-primary rounded">{user.userCode}</span>
+                            <span className="text-[10px] text-muted-foreground/60">{user.id}</span>
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -1105,10 +1170,10 @@ export default function UserAdminPage() {
 
       {/* Modals */}
       {createOpen && (
-        <UserModal onClose={() => setCreateOpen(false)} onSave={handleSaveUser} />
+        <UserModal onClose={() => setCreateOpen(false)} onSave={handleSaveUser} existingCodes={users.map(u => u.userCode)} />
       )}
       {editUser && (
-        <UserModal user={editUser} onClose={() => setEditUser(null)} onSave={handleSaveUser} />
+        <UserModal user={editUser} onClose={() => setEditUser(null)} onSave={handleSaveUser} existingCodes={users.map(u => u.userCode)} />
       )}
       {deactivateTargets && (
         <DeactivateModal
