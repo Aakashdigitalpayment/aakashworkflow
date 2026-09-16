@@ -64,6 +64,7 @@ const navGroups: NavGroup[] = [
       { id: 'nav-automation', label: 'Automation', icon: 'BoltIcon', href: '/automation' },
       { id: 'nav-coop-settings', label: 'Cooperative Settings', icon: 'AdjustmentsHorizontalIcon', href: '/cooperative-settings' },
       { id: 'nav-settings', label: 'Settings', icon: 'Cog6ToothIcon', href: '/settings' },
+      { id: 'nav-personal-settings', label: 'Personal Settings', icon: 'UserCircleIcon', href: '/personal-settings' },
     ],
   },
 ];
