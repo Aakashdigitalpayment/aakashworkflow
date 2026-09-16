@@ -62,6 +62,7 @@ const navGroups: NavGroup[] = [
       { id: 'nav-roles', label: 'Roles & Permissions', icon: 'ShieldCheckIcon', href: '/roles' },
       { id: 'nav-notifications', label: 'Notifications', icon: 'BellIcon', href: '/notifications' },
       { id: 'nav-automation', label: 'Automation', icon: 'BoltIcon', href: '/automation' },
+      { id: 'nav-coop-settings', label: 'Cooperative Settings', icon: 'AdjustmentsHorizontalIcon', href: '/cooperative-settings' },
       { id: 'nav-settings', label: 'Settings', icon: 'Cog6ToothIcon', href: '/settings' },
     ],
   },
