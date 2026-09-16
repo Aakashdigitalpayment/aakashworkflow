@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Icon from '@/components/ui/AppIcon';
 import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 interface KPIData {
   totalTasks: number;
@@ -25,6 +26,8 @@ interface KPICard {
   badge?: string;
   badgeVariant?: 'red' | 'amber' | 'green' | 'blue' | 'purple';
   variant: 'default' | 'alert' | 'warning' | 'success' | 'info' | 'purple';
+  href: string;
+  tooltip: string;
 }
 
 const variantStyles: Record<KPICard['variant'], {
@@ -35,42 +38,42 @@ const variantStyles: Record<KPICard['variant'], {
   accentLine: string;
 }> = {
   default: {
-    card: 'bg-card border-border hover:border-primary/30',
+    card: 'bg-card border-border hover:border-primary/40 hover:shadow-md',
     iconBg: 'bg-primary/10',
     iconColor: 'text-primary',
     valueColor: 'text-foreground',
     accentLine: 'bg-primary',
   },
   alert: {
-    card: 'bg-card border-border hover:border-red-300',
+    card: 'bg-card border-border hover:border-red-300 hover:shadow-md',
     iconBg: 'bg-red-100',
     iconColor: 'text-red-600',
     valueColor: 'text-red-600',
     accentLine: 'bg-red-500',
   },
   warning: {
-    card: 'bg-card border-border hover:border-amber-300',
+    card: 'bg-card border-border hover:border-amber-300 hover:shadow-md',
     iconBg: 'bg-amber-100',
     iconColor: 'text-amber-600',
     valueColor: 'text-amber-600',
     accentLine: 'bg-amber-500',
   },
   success: {
-    card: 'bg-card border-border hover:border-green-300',
+    card: 'bg-card border-border hover:border-green-300 hover:shadow-md',
     iconBg: 'bg-green-100',
     iconColor: 'text-green-600',
     valueColor: 'text-green-600',
     accentLine: 'bg-green-500',
   },
   info: {
-    card: 'bg-card border-border hover:border-blue-300',
+    card: 'bg-card border-border hover:border-blue-300 hover:shadow-md',
     iconBg: 'bg-blue-100',
     iconColor: 'text-blue-600',
     valueColor: 'text-blue-600',
     accentLine: 'bg-blue-500',
   },
   purple: {
-    card: 'bg-card border-border hover:border-purple-300',
+    card: 'bg-card border-border hover:border-purple-300 hover:shadow-md',
     iconBg: 'bg-purple-100',
     iconColor: 'text-purple-600',
     valueColor: 'text-purple-600',
@@ -82,6 +85,7 @@ export default function DashboardKPIGrid() {
   const [stats, setStats] = useState<KPIData | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -132,6 +136,8 @@ export default function DashboardKPIGrid() {
       subtext: `${stats?.openTasks ?? 0} open · unstarted`,
       icon: 'RectangleStackIcon',
       variant: 'default',
+      href: '/task-management',
+      tooltip: 'View all tasks',
     },
     {
       id: 'kpi-open',
@@ -140,6 +146,8 @@ export default function DashboardKPIGrid() {
       subtext: 'Awaiting acceptance',
       icon: 'ClipboardDocumentListIcon',
       variant: 'info',
+      href: '/task-management?status=open',
+      tooltip: 'View open tasks',
     },
     {
       id: 'kpi-inprogress',
@@ -148,6 +156,8 @@ export default function DashboardKPIGrid() {
       subtext: 'Actively being worked on',
       icon: 'ArrowPathIcon',
       variant: 'purple',
+      href: '/task-management?status=in_progress',
+      tooltip: 'View in-progress tasks',
     },
     {
       id: 'kpi-completed',
@@ -156,16 +166,20 @@ export default function DashboardKPIGrid() {
       subtext: 'Finished this week',
       icon: 'CheckBadgeIcon',
       variant: 'success',
+      href: '/task-management?status=completed',
+      tooltip: 'View completed tasks',
     },
     {
       id: 'kpi-overdue',
       label: 'Overdue Tasks',
       value: stats?.overdue ?? 0,
-      subtext: 'Past due date',
+      subtext: 'Past due date — action needed',
       icon: 'ExclamationTriangleIcon',
       badge: 'Action Required',
       badgeVariant: 'red',
       variant: 'alert',
+      href: '/task-management?status=overdue',
+      tooltip: 'View overdue tasks',
     },
     {
       id: 'kpi-duetoday',
@@ -174,6 +188,8 @@ export default function DashboardKPIGrid() {
       subtext: 'Due by end of day',
       icon: 'ClockIcon',
       variant: 'warning',
+      href: '/task-management?dueDate=today',
+      tooltip: 'View tasks due today',
     },
     {
       id: 'kpi-approval',
@@ -184,6 +200,8 @@ export default function DashboardKPIGrid() {
       badge: 'Pending',
       badgeVariant: 'amber',
       variant: 'warning',
+      href: '/pending-approvals',
+      tooltip: 'Go to pending approvals',
     },
     {
       id: 'kpi-blocked',
@@ -192,6 +210,8 @@ export default function DashboardKPIGrid() {
       subtext: 'Waiting on dependency',
       icon: 'NoSymbolIcon',
       variant: 'alert',
+      href: '/task-management?status=blocked',
+      tooltip: 'View blocked tasks',
     },
   ];
 
@@ -225,9 +245,12 @@ export default function DashboardKPIGrid() {
       {kpiCards.map((card) => {
         const styles = variantStyles[card.variant];
         return (
-          <div
+          <button
             key={card.id}
-            className={`relative border rounded-xl p-4 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer overflow-hidden ${styles.card}`}
+            type="button"
+            title={card.tooltip}
+            onClick={() => router.push(card.href)}
+            className={`relative border rounded-xl p-4 shadow-card transition-all duration-200 cursor-pointer overflow-hidden text-left w-full group active:scale-[0.98] ${styles.card}`}
           >
             {/* Top accent line */}
             <div className={`absolute top-0 left-0 right-0 h-0.5 ${styles.accentLine} opacity-60`} />
@@ -236,19 +259,21 @@ export default function DashboardKPIGrid() {
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${styles.iconBg}`}>
                 <Icon name={card.icon as any} size={18} className={styles.iconColor} />
               </div>
-              {card.badge && (
+              {card.badge ? (
                 <span className={`text-[9px] font-600 px-1.5 py-0.5 rounded-full leading-tight ${badgeStyles[card.badgeVariant || 'amber']}`}>
                   {card.badge}
                 </span>
+              ) : (
+                <Icon name="ArrowTopRightOnSquareIcon" size={12} className="text-muted-foreground opacity-0 group-hover:opacity-60 transition-opacity mt-0.5" />
               )}
             </div>
 
-            <div className={`text-2xl font-700 font-tabular leading-none mb-1 ${styles.valueColor}`}>
+            <div className={`text-2xl font-700 font-tabular leading-none mb-1.5 ${styles.valueColor}`}>
               {card.value}
             </div>
             <p className="text-xs font-600 text-foreground leading-tight mb-0.5">{card.label}</p>
-            <p className="text-[10px] text-muted-foreground leading-tight">{card.subtext}</p>
-          </div>
+            <p className="text-[11px] text-muted-foreground leading-tight">{card.subtext}</p>
+          </button>
         );
       })}
     </div>

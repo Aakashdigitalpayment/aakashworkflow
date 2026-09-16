@@ -50,19 +50,24 @@ const navGroups: NavGroup[] = [
     label: 'Insights',
     items: [
       { id: 'nav-reports', label: 'Reports', icon: 'ChartBarIcon', href: '/reports' },
+      { id: 'nav-exec-reports', label: 'Executive Reports', icon: 'PresentationChartLineIcon', href: '/executive-reports' },
       { id: 'nav-activity', label: 'Activity Log', icon: 'ClockIcon', href: '/activity-log' },
+      { id: 'nav-compliance', label: 'Compliance', icon: 'ShieldCheckIcon', href: '/compliance' },
     ],
   },
   {
     id: 'group-admin',
     label: 'Administration',
     items: [
+      { id: 'nav-user-admin', label: 'User Admin', icon: 'ShieldCheckIcon', href: '/user-admin' },
       { id: 'nav-admin', label: 'Employee Admin', icon: 'UserGroupIcon', href: '/admin' },
       { id: 'nav-users', label: 'Users', icon: 'UsersIcon', href: '/users' },
       { id: 'nav-roles', label: 'Roles & Permissions', icon: 'ShieldCheckIcon', href: '/roles' },
       { id: 'nav-notifications', label: 'Notifications', icon: 'BellIcon', href: '/notifications' },
       { id: 'nav-automation', label: 'Automation', icon: 'BoltIcon', href: '/automation' },
+      { id: 'nav-coop-settings', label: 'Cooperative Settings', icon: 'AdjustmentsHorizontalIcon', href: '/cooperative-settings' },
       { id: 'nav-settings', label: 'Settings', icon: 'Cog6ToothIcon', href: '/settings' },
+      { id: 'nav-personal-settings', label: 'Personal Settings', icon: 'UserCircleIcon', href: '/personal-settings' },
     ],
   },
 ];
