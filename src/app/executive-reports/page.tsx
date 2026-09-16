@@ -264,20 +264,20 @@ export default function ExecutiveReportsPage() {
       {/* ── Executive KPI Strip ── */}
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-5">
         {[
-          { label: 'Total Tasks', value: totalTasks, sub: 'FY 2083/84', icon: 'RectangleStackIcon', color: 'text-primary', bg: 'bg-primary/8' },
+          { label: 'Total Tasks', value: totalTasks, sub: 'FY 2083/84', icon: 'RectangleStackIcon', color: 'text-primary', bg: 'bg-primary/10' },
           { label: 'Completion Rate', value: `${completionRate}%`, sub: `${totalCompleted} completed`, icon: 'CheckCircleIcon', color: 'text-green-600', bg: 'bg-green-50' },
           { label: 'SLA Adherence', value: `${overallSLA}%`, sub: 'Org average', icon: 'ClockIcon', color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Overdue Tasks', value: totalOverdue, sub: 'Needs attention', icon: 'ExclamationTriangleIcon', color: 'text-red-600', bg: 'bg-red-50' },
           { label: 'Avg Approval', value: `${avgApprovalHrs}h`, sub: 'Turnaround time', icon: 'CheckBadgeIcon', color: 'text-purple-600', bg: 'bg-purple-50' },
           { label: 'Escalations', value: totalEscalations, sub: 'This FY', icon: 'ArrowUpCircleIcon', color: 'text-amber-600', bg: 'bg-amber-50' },
         ].map((kpi) => (
-          <div key={kpi.label} className="bg-card border border-border rounded-xl p-3.5">
-            <div className={`w-8 h-8 rounded-lg ${kpi.bg} flex items-center justify-center mb-2`}>
+          <div key={kpi.label} className="bg-card border border-border rounded-xl p-3.5 hover:shadow-sm transition-shadow">
+            <div className={`w-8 h-8 rounded-lg ${kpi.bg} flex items-center justify-center mb-2.5`}>
               <AppIcon name={kpi.icon as any} size={16} className={kpi.color} />
             </div>
-            <p className="text-xl font-800 text-foreground leading-none">{kpi.value}</p>
-            <p className="text-[11px] font-600 text-foreground mt-1">{kpi.label}</p>
-            <p className="text-[10px] text-muted-foreground">{kpi.sub}</p>
+            <p className={`text-xl font-800 leading-none ${kpi.color}`}>{kpi.value}</p>
+            <p className="text-xs font-600 text-foreground mt-1.5 leading-tight">{kpi.label}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{kpi.sub}</p>
           </div>
         ))}
       </div>
