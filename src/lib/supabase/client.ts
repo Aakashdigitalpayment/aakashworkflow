@@ -90,22 +90,20 @@ if (typeof window !== 'undefined' && !(window as any).__sb_patched__) {
 }
 
 export function createClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY_2 ||
+    process.env.SUPABASE_PUBLISHABLE_KEY;
 
-  if (
-    !url ||
-    !key ||
-    url === 'https://your-project-ref.supabase.co' ||
-    key === 'your-anon-key-here'
-  ) {
-    // Return a no-op stub so the app renders without crashing when env vars are not configured
+  if (!url || !key || url === 'https://your-project-ref.supabase.co' || key === 'your-anon-key-here') {
     return {
       auth: {
         getUser: async () => ({ data: { user: null }, error: null }),
         getSession: async () => ({ data: { session: null }, error: null }),
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-        signInWithPassword: async () => ({ data: null, error: new Error('Supabase not configured') }),
+        signInWithPassword: async () => ({ data: null, error: new Error('Supabase is not configured') }),
+        signUp: async () => ({ data: null, error: new Error('Supabase is not configured') }),
         signOut: async () => ({ error: null }),
       },
       from: () => ({

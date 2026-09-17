@@ -9,7 +9,7 @@ function isPublicRoute(pathname: string): boolean {
 }
 
 function getProjectRef(): string {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   return url.match(/https:\/\/([^.]+)\./)?.[1] ?? '';
 }
 
@@ -44,6 +44,18 @@ export async function middleware(request: NextRequest) {
 
   injectTokenFromHeader(request);
   const supabaseResponse = NextResponse.next({ request });
+
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_PUBLISHABLE_KEY_2 ||
+    process.env.SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    return isPublicRoute(request.nextUrl.pathname)
+      ? supabaseResponse
+      : redirectTo(request, '/login-screen');
+  }
 
   const supabase = createServerClient(
     supabaseUrl,

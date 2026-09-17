@@ -434,7 +434,7 @@ export async function fetchTasks(): Promise<Task[]> {
       .select('task_id, is_completed')
       .in(
         'task_id',
-        tasks.map((t) => t.id)
+        tasks.map((t: Task) => t.id)
       );
 
     const totals = new Map<string, { total: number; done: number }>();
@@ -671,7 +671,7 @@ export async function fetchTaskSubtasks(taskId: string): Promise<TaskSubtask[]> 
 
   if (error) throw new Error(error.message);
 
-  return (data ?? []).map((row) => ({
+  return (data ?? []).map((row: any) => ({
     id: row.id,
     title: row.title,
     isCompleted: row.is_completed ?? false,
