@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 import Icon from '@/components/ui/AppIcon';
 
@@ -251,6 +252,7 @@ export default function AutomationPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQ(true)}>
+      <PreviewNotice module="Automation" />
       {/* Toast */}
       {toast && (
         <div

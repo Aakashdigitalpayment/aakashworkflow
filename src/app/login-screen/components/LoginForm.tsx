@@ -21,14 +21,58 @@ interface DemoCredential {
   color: string;
 }
 
-const demoCredentials: DemoCredential[] = [
-  { role: 'CEO / GM', email: 'ceo@aakashcooperative.com.np', password: 'AakashCEO@2083', color: 'bg-primary/10 text-primary' },
-  { role: 'Manager', email: 'manager@aakashcooperative.com.np', password: 'AakashMgr@2083', color: 'bg-indigo-100 text-indigo-700' },
-  { role: 'Dept Head', email: 'depthead@aakashcooperative.com.np', password: 'AakashDH@2083', color: 'bg-purple-100 text-purple-700' },
-  { role: 'Officer', email: 'officer@aakashcooperative.com.np', password: 'AakashOff@2083', color: 'bg-amber-100 text-amber-700' },
-  { role: 'Employee', email: 'employee@aakashcooperative.com.np', password: 'AakashEmp@2083', color: 'bg-green-100 text-green-700' },
-  { role: 'Auditor', email: 'auditor@aakashcooperative.com.np', password: 'AakashAud@2083', color: 'bg-slate-100 text-slate-700' },
+/**
+ * The demo credential table is DEVELOPMENT ONLY. Plaintext passwords must
+ * never be compiled into a production bundle, so it renders only when
+ * NEXT_PUBLIC_ENABLE_DEMO_LOGINS is explicitly "true" — a local-dev flag.
+ */
+const DEMO_LOGINS_ENABLED = process.env.NEXT_PUBLIC_ENABLE_DEMO_LOGINS === 'true';
+
+const demoAccounts = [
+  { role: 'CEO / GM', email: 'ceo@aakashcooperative.com.np', color: 'bg-primary/10 text-primary' },
+  {
+    role: 'Manager',
+    email: 'manager@aakashcooperative.com.np',
+    color: 'bg-indigo-100 text-indigo-700',
+  },
+  {
+    role: 'Dept Head',
+    email: 'depthead@aakashcooperative.com.np',
+    color: 'bg-purple-100 text-purple-700',
+  },
+  {
+    role: 'Officer',
+    email: 'officer@aakashcooperative.com.np',
+    color: 'bg-amber-100 text-amber-700',
+  },
+  {
+    role: 'Employee',
+    email: 'employee@aakashcooperative.com.np',
+    color: 'bg-green-100 text-green-700',
+  },
+  {
+    role: 'Auditor',
+    email: 'auditor@aakashcooperative.com.np',
+    color: 'bg-slate-100 text-slate-700',
+  },
 ];
+
+const demoCredentialMap: Record<string, string> = {
+  'ceo@aakashcooperative.com.np': process.env.NEXT_PUBLIC_DEMO_CEO_PASSWORD ?? '',
+  'manager@aakashcooperative.com.np': process.env.NEXT_PUBLIC_DEMO_MANAGER_PASSWORD ?? '',
+  'depthead@aakashcooperative.com.np': process.env.NEXT_PUBLIC_DEMO_DEPT_HEAD_PASSWORD ?? '',
+  'officer@aakashcooperative.com.np': process.env.NEXT_PUBLIC_DEMO_OFFICER_PASSWORD ?? '',
+  'employee@aakashcooperative.com.np': process.env.NEXT_PUBLIC_DEMO_EMPLOYEE_PASSWORD ?? '',
+  'auditor@aakashcooperative.com.np': process.env.NEXT_PUBLIC_DEMO_AUDITOR_PASSWORD ?? '',
+};
+
+// Only offer accounts whose password was actually supplied via env.
+const demoCredentials: DemoCredential[] = demoAccounts
+  .map((account) => ({
+    ...account,
+    password: demoCredentialMap[account.email] || '',
+  }))
+  .filter((cred) => cred.password.length > 0);
 
 export default function LoginForm() {
   const router = useRouter();
@@ -68,25 +112,36 @@ export default function LoginForm() {
   return (
     <div className="min-h-screen flex">
       {/* Left Panel — Brand */}
-      <div className="hidden lg:flex lg:w-[46%] xl:w-[44%] flex-col justify-between p-10 relative overflow-hidden"
+      <div
+        className="hidden lg:flex lg:w-[46%] xl:w-[44%] flex-col justify-between p-10 relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 45%, #1d4ed8 100%)' }}
       >
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full opacity-10"
-            style={{ background: 'radial-gradient(circle, #60a5fa, transparent)' }} />
-          <div className="absolute -bottom-32 -right-16 w-80 h-80 rounded-full opacity-10"
-            style={{ background: 'radial-gradient(circle, #93c5fd, transparent)' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full opacity-5"
-            style={{ background: 'radial-gradient(circle, #bfdbfe, transparent)' }} />
+          <div
+            className="absolute -top-24 -left-24 w-96 h-96 rounded-full opacity-10"
+            style={{ background: 'radial-gradient(circle, #60a5fa, transparent)' }}
+          />
+          <div
+            className="absolute -bottom-32 -right-16 w-80 h-80 rounded-full opacity-10"
+            style={{ background: 'radial-gradient(circle, #93c5fd, transparent)' }}
+          />
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full opacity-5"
+            style={{ background: 'radial-gradient(circle, #bfdbfe, transparent)' }}
+          />
         </div>
 
         {/* Top: Logo */}
         <div className="flex items-center gap-3 relative z-10">
           <AppLogo size={40} />
           <div>
-            <span className="font-700 text-lg text-white tracking-tight block leading-tight">AakashWorkFlow</span>
-            <span className="text-xs text-blue-200 block leading-tight">Aakash Cooperative Ltd.</span>
+            <span className="font-700 text-lg text-white tracking-tight block leading-tight">
+              AakashWorkFlow
+            </span>
+            <span className="text-xs text-blue-200 block leading-tight">
+              Aakash Cooperative Ltd.
+            </span>
           </div>
         </div>
 
@@ -98,8 +153,10 @@ export default function LoginForm() {
               <span className="text-xs font-500 text-blue-100">Internal Operations Platform</span>
             </div>
             <h1 className="text-3xl xl:text-4xl font-700 text-white leading-tight mb-4">
-              Every Task.<br />
-              Every Responsibility.<br />
+              Every Task.
+              <br />
+              Every Responsibility.
+              <br />
               <span className="text-blue-300">Clearly Connected.</span>
             </h1>
             <p className="text-sm text-blue-200 leading-relaxed max-w-xs">
@@ -110,11 +167,17 @@ export default function LoginForm() {
           {/* Feature pills */}
           <div className="flex flex-col gap-3">
             {[
-              { icon: 'ClipboardDocumentCheckIcon', text: 'Task lifecycle from creation to completion' },
+              {
+                icon: 'ClipboardDocumentCheckIcon',
+                text: 'Task lifecycle from creation to completion',
+              },
               { icon: 'UsersIcon', text: 'Department-wise accountability & workload' },
               { icon: 'ChartBarIcon', text: 'Real-time progress & approval tracking' },
             ].map((feat, i) => (
-              <div key={`feat-${i}`} className="flex items-center gap-3 bg-white/8 rounded-lg px-3 py-2.5">
+              <div
+                key={`feat-${i}`}
+                className="flex items-center gap-3 bg-white/8 rounded-lg px-3 py-2.5"
+              >
                 <div className="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
                   <Icon name={feat.icon as any} size={14} className="text-blue-200" />
                 </div>
@@ -151,12 +214,15 @@ export default function LoginForm() {
           <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-lg px-3.5 py-2.5 mb-6">
             <Icon name="LockClosedIcon" size={14} className="text-amber-600 mt-0.5 flex-shrink-0" />
             <p className="text-xs text-amber-700 leading-relaxed">
-              <span className="font-600">Restricted System.</span> This platform is for Aakash Cooperative staff only. No public registration. Unauthorized access is prohibited.
+              <span className="font-600">Restricted System.</span> This platform is for Aakash
+              Cooperative staff only. No public registration. Unauthorized access is prohibited.
             </p>
           </div>
 
           <h2 className="text-2xl font-700 text-foreground mb-1">Sign in to your account</h2>
-          <p className="text-sm text-muted-foreground mb-7">Enter your work email and password to continue.</p>
+          <p className="text-sm text-muted-foreground mb-7">
+            Enter your work email and password to continue.
+          </p>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
             {/* Email */}
@@ -179,7 +245,11 @@ export default function LoginForm() {
               />
               {errors.email && (
                 <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
-                  <Icon name="ExclamationCircleIcon" size={12} className="text-red-500 flex-shrink-0" />
+                  <Icon
+                    name="ExclamationCircleIcon"
+                    size={12}
+                    className="text-red-500 flex-shrink-0"
+                  />
                   {errors.email.message}
                 </p>
               )}
@@ -216,7 +286,11 @@ export default function LoginForm() {
               </div>
               {errors.password && (
                 <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
-                  <Icon name="ExclamationCircleIcon" size={12} className="text-red-500 flex-shrink-0" />
+                  <Icon
+                    name="ExclamationCircleIcon"
+                    size={12}
+                    className="text-red-500 flex-shrink-0"
+                  />
                   {errors.password.message}
                 </p>
               )}
@@ -245,68 +319,80 @@ export default function LoginForm() {
             >
               {isLoading ? (
                 <>
-                  <Icon name="ArrowPathIcon" size={16} className="animate-spin text-primary-foreground" />
+                  <Icon
+                    name="ArrowPathIcon"
+                    size={16}
+                    className="animate-spin text-primary-foreground"
+                  />
                   <span>Signing in…</span>
                 </>
               ) : (
                 <>
-                  <Icon name="ArrowRightOnRectangleIcon" size={16} className="text-primary-foreground" />
+                  <Icon
+                    name="ArrowRightOnRectangleIcon"
+                    size={16}
+                    className="text-primary-foreground"
+                  />
                   <span>Sign In to AakashWorkFlow</span>
                 </>
               )}
             </button>
           </form>
 
-          {/* Demo Credentials */}
-          <div className="mt-7">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="flex-1 h-px bg-border" />
-              <span className="text-xs text-muted-foreground font-500 px-2">Demo Accounts</span>
-              <div className="flex-1 h-px bg-border" />
-            </div>
-            <p className="text-xs text-muted-foreground mb-3 text-center">
-              Click any role to autofill credentials
-            </p>
-            <div className="rounded-xl border border-border overflow-hidden">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="bg-muted/60 border-b border-border">
-                    <th className="text-left px-3 py-2 font-600 text-muted-foreground">Role</th>
-                    <th className="text-left px-3 py-2 font-600 text-muted-foreground">Email</th>
-                    <th className="px-3 py-2 font-600 text-muted-foreground text-center">Use</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {demoCredentials.map((cred, i) => (
-                    <tr
-                      key={`cred-${cred.role.replace(/\s/g, '-').toLowerCase()}`}
-                      className={`border-b border-border/50 last:border-0 hover:bg-muted/40 transition-colors ${
-                        i % 2 === 0 ? 'bg-card' : 'bg-muted/20'
-                      }`}
-                    >
-                      <td className="px-3 py-2">
-                        <span className={`text-[10px] font-600 px-1.5 py-0.5 rounded-full ${cred.color}`}>
-                          {cred.role}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2 text-muted-foreground font-400 truncate max-w-[180px]">
-                        {cred.email}
-                      </td>
-                      <td className="px-3 py-2 text-center">
-                        <button
-                          type="button"
-                          onClick={() => autofill(cred)}
-                          className="px-2 py-1 text-[10px] font-600 bg-primary/10 text-primary rounded hover:bg-primary/20 transition-colors"
-                        >
-                          Use
-                        </button>
-                      </td>
+          {/* Demo Credentials — development only, hidden unless explicitly enabled */}
+          {DEMO_LOGINS_ENABLED && demoCredentials.length > 0 && (
+            <div className="mt-7">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-xs text-muted-foreground font-500 px-2">Demo Accounts</span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+              <p className="text-xs text-muted-foreground mb-3 text-center">
+                Click any role to autofill credentials
+              </p>
+              <div className="rounded-xl border border-border overflow-hidden">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="bg-muted/60 border-b border-border">
+                      <th className="text-left px-3 py-2 font-600 text-muted-foreground">Role</th>
+                      <th className="text-left px-3 py-2 font-600 text-muted-foreground">Email</th>
+                      <th className="px-3 py-2 font-600 text-muted-foreground text-center">Use</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {demoCredentials.map((cred, i) => (
+                      <tr
+                        key={`cred-${cred.role.replace(/\s/g, '-').toLowerCase()}`}
+                        className={`border-b border-border/50 last:border-0 hover:bg-muted/40 transition-colors ${
+                          i % 2 === 0 ? 'bg-card' : 'bg-muted/20'
+                        }`}
+                      >
+                        <td className="px-3 py-2">
+                          <span
+                            className={`text-[10px] font-600 px-1.5 py-0.5 rounded-full ${cred.color}`}
+                          >
+                            {cred.role}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground font-400 truncate max-w-[180px]">
+                          {cred.email}
+                        </td>
+                        <td className="px-3 py-2 text-center">
+                          <button
+                            type="button"
+                            onClick={() => autofill(cred)}
+                            className="px-2 py-1 text-[10px] font-600 bg-primary/10 text-primary rounded hover:bg-primary/20 transition-colors"
+                          >
+                            Use
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          )}
 
           <p className="text-xs text-muted-foreground text-center mt-6">
             Having trouble? Contact{' '}

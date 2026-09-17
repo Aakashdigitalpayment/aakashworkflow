@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -77,6 +78,7 @@ export default function ActivityLogPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreateOpen(true)}>
+      <PreviewNotice module="Activity Log" note="Per-task history is available now in the task detail panel under Activity Log." />
       {/* Header */}
       <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
         <div>

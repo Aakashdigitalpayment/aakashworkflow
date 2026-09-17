@@ -57,9 +57,10 @@ const timeAgo = (dateStr: string): string => {
 
 interface TopbarProps {
   onQuickCreate: () => void;
+  onOpenNav?: () => void;
 }
 
-export default function Topbar({ onQuickCreate }: TopbarProps) {
+export default function Topbar({ onQuickCreate, onOpenNav }: TopbarProps) {
   const { user, profile, signOut } = useAuth();
   const router = useRouter();
   const [notifOpen, setNotifOpen] = useState(false);
@@ -80,7 +81,7 @@ export default function Topbar({ onQuickCreate }: TopbarProps) {
         .limit(10);
 
       if (error) {
-        console.log('Notifications error:', error.message);
+        console.error('Notifications error:', error.message);
         return;
       }
 
@@ -101,13 +102,23 @@ export default function Topbar({ onQuickCreate }: TopbarProps) {
 
     const channel = supabase
       .channel(`notifs_${user.id}`)
-      .on('postgres_changes', {
-        event: 'INSERT', schema: 'public', table: 'notifications',
-        filter: `user_id=eq.${user.id}`,
-      }, () => { fetchNotifications(); })
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          fetchNotifications();
+        }
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   const markAllRead = async () => {
@@ -126,22 +137,43 @@ export default function Topbar({ onQuickCreate }: TopbarProps) {
       router.push('/login-screen');
       router.refresh();
     } catch (err) {
-      console.log('Sign out error:', err);
+      console.error('Sign out error:', err);
     }
   };
 
-  const initials = profile?.avatarInitials || profile?.fullName?.split(' ').map((n) => n[0]).join('').slice(0, 3).toUpperCase() || 'U';
+  const initials =
+    profile?.avatarInitials ||
+    profile?.fullName
+      ?.split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 3)
+      .toUpperCase() ||
+    'U';
   const displayName = profile?.fullName || user?.email?.split('@')[0] || 'User';
 
   return (
-    <header className="h-16 bg-card border-b border-border shadow-topbar flex items-center px-4 gap-3 sticky top-0 z-30 flex-shrink-0">
+    <header className="h-16 bg-card border-b border-border shadow-topbar flex items-center px-3 sm:px-4 gap-2 sm:gap-3 sticky top-0 z-30 flex-shrink-0">
+      {/* Mobile navigation trigger */}
+      <button
+        onClick={onOpenNav}
+        className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-secondary transition-colors flex-shrink-0"
+        aria-label="Open navigation"
+      >
+        <Icon name="Bars3Icon" size={20} className="text-muted-foreground" />
+      </button>
+
       {/* Search */}
-      <div className="flex-1 max-w-md">
+      <div className="flex-1 max-w-md min-w-0">
         <div className="relative">
-          <Icon name="MagnifyingGlassIcon" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Icon
+            name="MagnifyingGlassIcon"
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
           <input
             type="text"
-            placeholder="Search tasks, IDs, employees… (Ctrl+K)"
+            placeholder="Search tasks…"
             className="w-full pl-9 pr-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-ring text-foreground placeholder:text-muted-foreground transition-all"
           />
         </div>
@@ -180,15 +212,26 @@ export default function Topbar({ onQuickCreate }: TopbarProps) {
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-600 text-foreground">Notifications</h3>
                     {unreadCount > 0 && (
-                      <span className="text-xs font-600 px-1.5 py-0.5 bg-red-50 text-red-600 rounded-full">{unreadCount} new</span>
+                      <span className="text-xs font-600 px-1.5 py-0.5 bg-red-50 text-red-600 rounded-full">
+                        {unreadCount} new
+                      </span>
                     )}
                   </div>
-                  <button onClick={markAllRead} className="text-xs text-primary hover:underline font-500">Mark all read</button>
+                  <button
+                    onClick={markAllRead}
+                    className="text-xs text-primary hover:underline font-500"
+                  >
+                    Mark all read
+                  </button>
                 </div>
                 <div className="max-h-80 overflow-y-auto scrollbar-thin">
                   {notifications.length === 0 ? (
                     <div className="px-4 py-8 text-center">
-                      <Icon name="BellSlashIcon" size={24} className="text-muted-foreground mx-auto mb-2" />
+                      <Icon
+                        name="BellSlashIcon"
+                        size={24}
+                        className="text-muted-foreground mx-auto mb-2"
+                      />
                       <p className="text-sm text-muted-foreground">No notifications yet</p>
                     </div>
                   ) : (
@@ -197,21 +240,31 @@ export default function Topbar({ onQuickCreate }: TopbarProps) {
                         key={notif.id}
                         className={`flex gap-3 px-4 py-3 border-b border-border/50 hover:bg-muted/50 transition-colors cursor-pointer ${!notif.read ? 'bg-primary/5' : ''}`}
                       >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${notifTypeColor[notif.type] || 'bg-secondary text-foreground'}`}>
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${notifTypeColor[notif.type] || 'bg-secondary text-foreground'}`}
+                        >
                           <Icon name={(notifTypeIcon[notif.type] || 'BellIcon') as any} size={14} />
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="text-xs font-600 text-foreground">{notif.title}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{notif.body}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                            {notif.body}
+                          </p>
                           <p className="text-[10px] text-muted-foreground mt-1">{notif.time}</p>
                         </div>
-                        {!notif.read && <div className="w-2 h-2 bg-primary rounded-full mt-1 flex-shrink-0" />}
+                        {!notif.read && (
+                          <div className="w-2 h-2 bg-primary rounded-full mt-1 flex-shrink-0" />
+                        )}
                       </div>
                     ))
                   )}
                 </div>
                 <div className="px-4 py-2.5 border-t border-border">
-                  <Link href="/inbox" className="text-xs text-primary font-500 hover:underline" onClick={() => setNotifOpen(false)}>
+                  <Link
+                    href="/inbox"
+                    className="text-xs text-primary font-500 hover:underline"
+                    onClick={() => setNotifOpen(false)}
+                  >
                     View all notifications →
                   </Link>
                 </div>
@@ -221,7 +274,10 @@ export default function Topbar({ onQuickCreate }: TopbarProps) {
         </div>
 
         {/* Help */}
-        <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-secondary transition-colors" aria-label="Help">
+        <button
+          className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-secondary transition-colors"
+          aria-label="Help"
+        >
           <Icon name="QuestionMarkCircleIcon" size={20} className="text-muted-foreground" />
         </button>
 
@@ -231,16 +287,23 @@ export default function Topbar({ onQuickCreate }: TopbarProps) {
             <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
               <span className="text-xs font-700 text-primary">{initials}</span>
             </div>
-            <span className="hidden md:block text-sm font-500 text-foreground max-w-[120px] truncate">{displayName}</span>
+            <span className="hidden md:block text-sm font-500 text-foreground max-w-[120px] truncate">
+              {displayName}
+            </span>
             <Icon name="ChevronDownIcon" size={14} className="text-muted-foreground" />
           </button>
           <div className="absolute right-0 top-10 w-48 bg-card border border-border rounded-xl shadow-modal z-50 hidden group-hover:block">
             <div className="px-3 py-2.5 border-b border-border">
               <p className="text-xs font-600 text-foreground truncate">{displayName}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{profile?.position || profile?.role || ''}</p>
+              <p className="text-[10px] text-muted-foreground truncate">
+                {profile?.position || profile?.role || ''}
+              </p>
             </div>
             <div className="py-1">
-              <Link href="/settings" className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors">
+              <Link
+                href="/settings"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary transition-colors"
+              >
                 <Icon name="Cog6ToothIcon" size={14} className="text-muted-foreground" />
                 Settings
               </Link>

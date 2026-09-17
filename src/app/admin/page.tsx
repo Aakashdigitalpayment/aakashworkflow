@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -222,6 +223,7 @@ export default function AdminPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreateOpen(true)}>
+      <PreviewNotice module="Employee Directory" note="Adding or editing staff here affects only this screen." />
       {/* Toast Container */}
       <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
         {toasts.map(t => (

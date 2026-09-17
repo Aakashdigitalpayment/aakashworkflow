@@ -1,11 +1,13 @@
 'use client';
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 export default function NotificationsPage() {
   const [q, setQ] = useState(false);
   return (
     <AppLayout onQuickCreate={() => setQ(true)}>
+      <PreviewNotice module="Notification Settings" />
       <div className="mb-6"><h1 className="text-2xl font-800 text-foreground">Notification Settings</h1><p className="text-sm text-muted-foreground mt-0.5">Configure in-app and email notification preferences</p></div>
       <div className="bg-card border border-border rounded-xl p-5 max-w-xl">
         <h3 className="text-sm font-700 text-foreground mb-4">My Notification Preferences</h3>

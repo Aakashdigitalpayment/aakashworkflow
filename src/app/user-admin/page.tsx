@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useCallback } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -762,6 +763,7 @@ export default function UserAdminPage() {
 
   return (
     <AppLayout onQuickCreate={() => setCreateOpen(true)}>
+      <PreviewNotice module="User Admin" note="Role changes are not saved. Use Supabase or the SQL editor to change a role." />
       {/* Toast Container */}
       <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
         {toasts.map(t => (

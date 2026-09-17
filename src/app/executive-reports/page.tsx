@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -174,6 +175,7 @@ export default function ExecutiveReportsPage() {
 
   return (
     <AppLayout onQuickCreate={() => {}}>
+      <PreviewNotice module="Executive Reports" />
       {/* ── Header ── */}
       <div className="flex items-start justify-between mb-5 gap-4 flex-wrap">
         <div>

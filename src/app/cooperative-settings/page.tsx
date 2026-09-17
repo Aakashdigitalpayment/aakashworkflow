@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import Icon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -222,6 +223,7 @@ export default function CooperativeSettingsPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreate(true)}>
+      <PreviewNotice module="Cooperative Settings" />
       {/* Header */}
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>

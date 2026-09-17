@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -169,6 +170,7 @@ export default function DepartmentsPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreateOpen(true)}>
+      <PreviewNotice module="Departments" note="The department list is a sample; real departments come from the database." />
       {/* Header */}
       <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
         <div>

@@ -30,13 +30,16 @@ interface KPICard {
   tooltip: string;
 }
 
-const variantStyles: Record<KPICard['variant'], {
-  card: string;
-  iconBg: string;
-  iconColor: string;
-  valueColor: string;
-  accentLine: string;
-}> = {
+const variantStyles: Record<
+  KPICard['variant'],
+  {
+    card: string;
+    iconBg: string;
+    iconColor: string;
+    valueColor: string;
+    accentLine: string;
+  }
+> = {
   default: {
     card: 'bg-card border-border hover:border-primary/40 hover:shadow-md',
     iconBg: 'bg-primary/10',
@@ -84,6 +87,7 @@ const variantStyles: Record<KPICard['variant'], {
 export default function DashboardKPIGrid() {
   const [stats, setStats] = useState<KPIData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
@@ -92,10 +96,11 @@ export default function DashboardKPIGrid() {
       try {
         const { data, error } = await supabase.rpc('get_dashboard_stats');
         if (error) {
-          console.log('Dashboard stats error:', error.message);
-          setLoading(false);
+          console.error('Dashboard stats error:', error.message);
+          setFailed(true);
           return;
         }
+        setFailed(false);
         if (data) {
           setStats({
             totalTasks: data.total_tasks || 0,
@@ -110,7 +115,8 @@ export default function DashboardKPIGrid() {
           });
         }
       } catch (err) {
-        console.log('KPI fetch error:', err);
+        console.error('KPI fetch error:', err);
+        setFailed(true);
       } finally {
         setLoading(false);
       }
@@ -125,7 +131,9 @@ export default function DashboardKPIGrid() {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const kpiCards: KPICard[] = [
@@ -227,7 +235,10 @@ export default function DashboardKPIGrid() {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-4 mb-5">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={`skel-${i}`} className="border border-border rounded-xl p-4 animate-pulse bg-card h-[110px]">
+          <div
+            key={`skel-${i}`}
+            className="border border-border rounded-xl p-4 animate-pulse bg-card h-[110px]"
+          >
             <div className="flex items-center justify-between mb-3">
               <div className="w-9 h-9 bg-secondary rounded-lg" />
               <div className="w-16 h-4 bg-secondary rounded-full" />
@@ -236,6 +247,23 @@ export default function DashboardKPIGrid() {
             <div className="h-3 bg-secondary rounded w-28" />
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (failed) {
+    return (
+      <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5">
+        <Icon name="ExclamationTriangleIcon" size={16} className="text-red-600 flex-shrink-0" />
+        <p className="text-sm text-red-700 flex-1">
+          Could not load dashboard figures. They are hidden rather than shown as zero.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="text-xs font-600 text-red-700 hover:underline flex-shrink-0"
+        >
+          Retry
+        </button>
       </div>
     );
   }
@@ -253,22 +281,34 @@ export default function DashboardKPIGrid() {
             className={`relative border rounded-xl p-4 shadow-card transition-all duration-200 cursor-pointer overflow-hidden text-left w-full group active:scale-[0.98] ${styles.card}`}
           >
             {/* Top accent line */}
-            <div className={`absolute top-0 left-0 right-0 h-0.5 ${styles.accentLine} opacity-60`} />
+            <div
+              className={`absolute top-0 left-0 right-0 h-0.5 ${styles.accentLine} opacity-60`}
+            />
 
             <div className="flex items-start justify-between mb-3">
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${styles.iconBg}`}>
+              <div
+                className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${styles.iconBg}`}
+              >
                 <Icon name={card.icon as any} size={18} className={styles.iconColor} />
               </div>
               {card.badge ? (
-                <span className={`text-[9px] font-600 px-1.5 py-0.5 rounded-full leading-tight ${badgeStyles[card.badgeVariant || 'amber']}`}>
+                <span
+                  className={`text-[9px] font-600 px-1.5 py-0.5 rounded-full leading-tight ${badgeStyles[card.badgeVariant || 'amber']}`}
+                >
                   {card.badge}
                 </span>
               ) : (
-                <Icon name="ArrowTopRightOnSquareIcon" size={12} className="text-muted-foreground opacity-0 group-hover:opacity-60 transition-opacity mt-0.5" />
+                <Icon
+                  name="ArrowTopRightOnSquareIcon"
+                  size={12}
+                  className="text-muted-foreground opacity-0 group-hover:opacity-60 transition-opacity mt-0.5"
+                />
               )}
             </div>
 
-            <div className={`text-2xl font-700 font-tabular leading-none mb-1.5 ${styles.valueColor}`}>
+            <div
+              className={`text-2xl font-700 font-tabular leading-none mb-1.5 ${styles.valueColor}`}
+            >
               {card.value}
             </div>
             <p className="text-xs font-600 text-foreground leading-tight mb-0.5">{card.label}</p>

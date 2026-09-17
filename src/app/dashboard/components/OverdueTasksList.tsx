@@ -87,7 +87,7 @@ export default function OverdueTasksList() {
           .limit(5);
 
         if (error) {
-          console.log('Overdue tasks error:', error.message);
+          console.error('Overdue tasks error:', error.message);
           setLoading(false);
           return;
         }
@@ -116,7 +116,7 @@ export default function OverdueTasksList() {
         });
         setDelayStates(initStates);
       } catch (err) {
-        console.log('Overdue fetch error:', err);
+        console.error('Overdue fetch error:', err);
       } finally {
         setLoading(false);
       }

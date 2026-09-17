@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import Icon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -739,6 +740,7 @@ export default function PersonalSettingsPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreate(true)}>
+      <PreviewNotice module="Personal Settings" />
       {/* Page Header */}
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
