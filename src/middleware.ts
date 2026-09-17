@@ -29,6 +29,19 @@ function redirectTo(request: NextRequest, pathname: string): NextResponse {
 }
 
 export async function middleware(request: NextRequest) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // If Supabase env vars are missing or still placeholder, skip auth checks
+  if (
+    !supabaseUrl ||
+    !supabaseKey ||
+    supabaseUrl === 'https://your-project-ref.supabase.co' ||
+    supabaseKey === 'your-anon-key-here'
+  ) {
+    return NextResponse.next({ request });
+  }
+
   injectTokenFromHeader(request);
   const supabaseResponse = NextResponse.next({ request });
 
