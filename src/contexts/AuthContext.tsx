@@ -109,7 +109,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           full_name: (metadata as any)?.fullName || '',
           avatar_url: (metadata as any)?.avatarUrl || '',
         },
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        emailRedirectTo:
+        process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
+        `${window.location.origin}/auth/callback`,
       },
     });
     if (error) throw error;
