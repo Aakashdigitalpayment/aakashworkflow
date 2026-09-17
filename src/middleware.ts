@@ -29,8 +29,14 @@ function redirectTo(request: NextRequest, pathname: string): NextResponse {
 }
 
 export async function middleware(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.SUPABASE_URL;
+  const supabaseKey =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY_2 ||
+    process.env.SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
   // If Supabase env vars are missing or still placeholder, skip auth checks
   if (
@@ -44,18 +50,6 @@ export async function middleware(request: NextRequest) {
 
   injectTokenFromHeader(request);
   const supabaseResponse = NextResponse.next({ request });
-
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey =
-    process.env.SUPABASE_PUBLISHABLE_KEY_2 ||
-    process.env.SUPABASE_PUBLISHABLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    return isPublicRoute(request.nextUrl.pathname)
-      ? supabaseResponse
-      : redirectTo(request, '/login-screen');
-  }
 
   const supabase = createServerClient(
     supabaseUrl,
