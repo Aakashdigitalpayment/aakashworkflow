@@ -85,7 +85,7 @@ export default function RecentActivityFeed() {
           .limit(10);
 
         if (error) {
-          console.log('Activity feed error:', error.message);
+          console.error('Activity feed error:', error.message);
           setLoading(false);
           return;
         }
@@ -102,7 +102,7 @@ export default function RecentActivityFeed() {
         }));
         setItems(mapped);
       } catch (err) {
-        console.log('Activity fetch error:', err);
+        console.error('Activity fetch error:', err);
       } finally {
         setLoading(false);
       }

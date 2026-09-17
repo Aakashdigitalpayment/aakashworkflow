@@ -63,7 +63,7 @@ export default function DueTodayList() {
           .limit(6);
 
         if (error) {
-          console.log('Due today error:', error.message);
+          console.error('Due today error:', error.message);
           setLoading(false);
           return;
         }
@@ -81,7 +81,7 @@ export default function DueTodayList() {
         }));
         setTasks(mapped);
       } catch (err) {
-        console.log('Due today fetch error:', err);
+        console.error('Due today fetch error:', err);
       } finally {
         setLoading(false);
       }

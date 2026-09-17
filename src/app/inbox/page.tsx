@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -283,6 +284,7 @@ export default function InboxPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreateOpen(true)}>
+      <PreviewNotice module="Inbox" note="Notifications are real; open the bell in the top bar to see them." />
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>

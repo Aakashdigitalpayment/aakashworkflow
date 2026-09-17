@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -191,6 +192,7 @@ export default function TemplatesPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreateOpen(true)}>
+      <PreviewNotice module="Templates" />
       {/* Header */}
       <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
         <div>

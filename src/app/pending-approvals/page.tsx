@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -541,6 +542,7 @@ export default function PendingApprovalsPage() {
 
   return (
     <AppLayout>
+      <PreviewNotice module="Pending Approvals" note="Approvals are performed from the task detail panel in Task Management." />
       <div className="flex flex-col h-full min-h-0">
         {/* Page Header */}
         <div className="flex-shrink-0 px-6 pt-6 pb-4 border-b border-border bg-card">

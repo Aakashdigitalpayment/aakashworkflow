@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import AppLayout from '@/components/AppLayout';
+import PreviewNotice from '@/components/PreviewNotice';
 import AppIcon from '@/components/ui/AppIcon';
 import QuickCreateModal from '../dashboard/components/QuickCreateModal';
 
@@ -352,6 +353,7 @@ export default function MyWorkPage() {
 
   return (
     <AppLayout onQuickCreate={() => setQuickCreateOpen(true)}>
+      <PreviewNotice module="My Work" note="Your real assigned tasks are in Task Management." />
 
       {/* ── Page Header ─────────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">

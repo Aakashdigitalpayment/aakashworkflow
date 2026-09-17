@@ -1,5 +1,12 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { canAccessRoute } from '@/lib/access';
+
+const PUBLIC_ROUTES = ['/login-screen', '/auth/callback', '/account-inactive', '/'];
+
+function isPublicRoute(pathname: string): boolean {
+  return PUBLIC_ROUTES.some((route) => pathname === route || pathname.startsWith(route + '/'));
+}
 
 function getProjectRef(): string {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -14,9 +21,16 @@ function injectTokenFromHeader(request: NextRequest): void {
   request.cookies.set(`sb-${getProjectRef()}-auth-token`, token);
 }
 
+function redirectTo(request: NextRequest, pathname: string): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  url.search = '';
+  return NextResponse.redirect(url);
+}
+
 export async function middleware(request: NextRequest) {
   injectTokenFromHeader(request);
-  let supabaseResponse = NextResponse.next({ request });
+  const supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,41 +55,38 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
-  const isAuthPage = pathname === '/login-screen' || pathname === '/';
-  const isProtectedRoute =
-    pathname.startsWith('/dashboard') ||
-    pathname.startsWith('/my-work') ||
-    pathname.startsWith('/task-management') ||
-    pathname.startsWith('/departments') ||
-    pathname.startsWith('/users') ||
-    pathname.startsWith('/reports') ||
-    pathname.startsWith('/activity-log') ||
-    pathname.startsWith('/workflows') ||
-    pathname.startsWith('/templates') ||
-    pathname.startsWith('/calendar') ||
-    pathname.startsWith('/inbox') ||
-    pathname.startsWith('/roles') ||
-    pathname.startsWith('/notifications') ||
-    pathname.startsWith('/automation') ||
-    pathname.startsWith('/settings');
 
-  if (!user && isProtectedRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login-screen';
-    return NextResponse.redirect(url);
+  if (!user) {
+    return isPublicRoute(pathname) ? supabaseResponse : redirectTo(request, '/login-screen');
   }
 
-  if (user && isAuthPage) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
-    return NextResponse.redirect(url);
+  if (pathname === '/login-screen' || pathname === '/') {
+    return redirectTo(request, '/dashboard');
+  }
+
+  if (isPublicRoute(pathname)) return supabaseResponse;
+
+  // Role is read from the admin-controlled profile table — never from the
+  // client-editable user metadata. RLS stays the authoritative boundary.
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role, is_active')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (!profile || profile.is_active === false) {
+    // Must not redirect to /login-screen: the session is still valid, so that
+    // would redirect back here via /dashboard and loop forever.
+    return redirectTo(request, '/account-inactive');
+  }
+
+  if (!canAccessRoute(pathname, profile.role)) {
+    return redirectTo(request, '/dashboard');
   }
 
   return supabaseResponse;
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };
