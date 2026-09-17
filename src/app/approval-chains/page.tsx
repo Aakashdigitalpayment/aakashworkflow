@@ -467,13 +467,13 @@ export default function ApprovalChainsPage() {
 
       if (pathsErr) throw pathsErr;
 
-      const enriched: ApprovalChain[] = (chainData || []).map((c) => ({
+      const enriched: ApprovalChain[] = (chainData || []).map((c: any) => ({
         ...c,
-        steps: (stepsData || []).filter((s) => s.chain_id === c.id),
-        paths: (pathsData || []).filter((p) => {
+        steps: (stepsData || []).filter((s: any) => s.chain_id === c.id),
+        paths: (pathsData || []).filter((p: any) => {
           const stepIds = (stepsData || [])
-            .filter((s) => s.chain_id === c.id)
-            .map((s) => s.id);
+            .filter((s: any) => s.chain_id === c.id)
+            .map((s: any) => s.id);
           return stepIds.includes(p.from_step_id);
         }),
       }));

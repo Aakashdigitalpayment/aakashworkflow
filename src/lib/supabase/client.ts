@@ -90,9 +90,35 @@ if (typeof window !== 'undefined' && !(window as any).__sb_patched__) {
 }
 
 export function createClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY_2 ||
+    process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!url || !key || url === 'https://your-project-ref.supabase.co' || key === 'your-anon-key-here') {
+    return {
+      auth: {
+        getUser: async () => ({ data: { user: null }, error: null }),
+        getSession: async () => ({ data: { session: null }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        signInWithPassword: async () => ({ data: null, error: new Error('Supabase is not configured') }),
+        signUp: async () => ({ data: null, error: new Error('Supabase is not configured') }),
+        signOut: async () => ({ error: null }),
+      },
+      from: () => ({
+        select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }), single: async () => ({ data: null, error: null }) }), single: async () => ({ data: null, error: null }), maybeSingle: async () => ({ data: null, error: null }) }),
+        insert: () => ({ select: () => ({ single: async () => ({ data: null, error: null }) }) }),
+        update: () => ({ eq: () => ({ select: () => ({ single: async () => ({ data: null, error: null }) }) }) }),
+        delete: () => ({ eq: () => ({}) }),
+        upsert: () => ({ select: () => ({ single: async () => ({ data: null, error: null }) }) }),
+      }),
+    } as any;
+  }
+
   return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    key,
     {
       cookies: {
         getAll: () => (canUseCookies() ? fromCookies() : fromStorage()),
