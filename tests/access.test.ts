@@ -54,6 +54,9 @@ test('admin routes are gated to management', () => {
     '/users',
     '/cooperative-settings',
     '/automation',
+    '/approval-chains',
+    '/workflows',
+    '/templates',
     '/executive-reports',
   ]) {
     assert.equal(canAccessRoute(route, 'employee'), false, route);

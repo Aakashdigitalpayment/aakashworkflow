@@ -46,8 +46,18 @@ npm install
 cp .env.example .env
 ```
 
-Then fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from
-your Supabase project (Dashboard → Project Settings → API).
+Then configure the server-safe Supabase variables used by this project:
+
+```bash
+SUPABASE_URL=...
+SUPABASE_PUBLISHABLE_KEY=...
+SUPABASE_SECRET_KEY=...
+SUPABASE_JWKS_URL=...
+```
+
+The publishable key is safe for browser access; never expose `SUPABASE_SECRET_KEY` to
+client components or prefix it with `NEXT_PUBLIC_`. The app also accepts the `_2`
+variants used by the connected Vercel environment.
 
 ### 3. Apply database migrations
 
